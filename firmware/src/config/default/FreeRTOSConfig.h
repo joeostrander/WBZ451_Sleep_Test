@@ -44,11 +44,12 @@
  *----------------------------------------------------------*/
 #define configUSE_PREEMPTION                    1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
-#define configUSE_TICKLESS_IDLE                 0
+#define configUSE_TICKLESS_IDLE                 1
+#define configEXPECTED_IDLE_TIME_BEFORE_SLEEP   5
 #define configCPU_CLOCK_HZ                      ( 64000000UL )
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES                    ( 5UL )
-#define configMINIMAL_STACK_SIZE                ( 128 )
+#define configMINIMAL_STACK_SIZE                ( 256 )
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configTOTAL_HEAP_SIZE                   ( ( size_t ) 40960 )
@@ -60,15 +61,15 @@
 #define configUSE_COUNTING_SEMAPHORES           1
 #define configUSE_TASK_NOTIFICATIONS            1
 #define configQUEUE_REGISTRY_SIZE               0
-#define configUSE_QUEUE_SETS                    0
+#define configUSE_QUEUE_SETS                    1
 #define configUSE_TIME_SLICING                  1
 #define configUSE_NEWLIB_REENTRANT              0
 #define configUSE_TASK_FPU_SUPPORT              0
 
 
 /* Hook function related definitions. */
-#define configUSE_IDLE_HOOK                     0
-#define configUSE_TICK_HOOK                     0
+#define configUSE_IDLE_HOOK                     1
+#define configUSE_TICK_HOOK                     1
 #define configCHECK_FOR_STACK_OVERFLOW          2
 #define configUSE_MALLOC_FAILED_HOOK            1
 
@@ -113,7 +114,7 @@
 #define INCLUDE_xTaskGetIdleTaskHandle          0
 #define INCLUDE_eTaskGetState                   0
 #define INCLUDE_xTimerPendFunctionCall          0
-#define INCLUDE_xTaskAbortDelay                 0
+#define INCLUDE_xTaskAbortDelay                 1
 #define INCLUDE_xTaskGetHandle                  0
 #define INCLUDE_xQueueGetMutexHolder            0
 #define INCLUDE_xSemaphoreGetMutexHolder        0

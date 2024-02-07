@@ -72,6 +72,20 @@ void lSYS_CMD_Tasks(  void *pvParameters  )
 
 
 /* Handle for the APP_Tasks. */
+TaskHandle_t xPHY_Tasks;
+
+static void _PHY_Tasks(  void *pvParameters  )
+{     
+    while(true)
+    {
+        PHY_Tasks();
+    }
+}
+
+
+
+
+/* Handle for the APP_Tasks. */
 TaskHandle_t xAPP_Tasks;
 
 static void lAPP_Tasks(  void *pvParameters  )
@@ -118,7 +132,15 @@ void SYS_Tasks ( void )
     
 
     /* Maintain Middleware & Other Libraries */
-    
+        /* Create FreeRTOS task for IEEE_802154_PHY */
+     (void)xTaskCreate((TaskFunction_t) _PHY_Tasks,
+                "PHY_Tasks",
+                1024,
+                NULL,
+                1,
+                &xPHY_Tasks);
+
+
 
     /* Maintain the application's state machine. */
         /* Create OS Thread for APP_Tasks. */

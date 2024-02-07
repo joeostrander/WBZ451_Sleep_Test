@@ -79,12 +79,11 @@ void __attribute__((optimize("-O1"), long_call, noreturn, used))Dummy_Handler(vo
 }
 
 /* MISRAC 2012 deviation block start */
-/* MISRA C-2012 Rule 8.6 deviated 39 times.  Deviation record ID -  H3_MISRAC_2012_R_8_6_DR_1 */
+/* MISRA C-2012 Rule 8.6 deviated 37 times.  Deviation record ID -  H3_MISRAC_2012_R_8_6_DR_1 */
 /* Device vectors list dummy definition*/
 extern void RTC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void EIC_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void FREQM_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
-extern void FLASH_CONTROL_Handler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void CHANGE_NOTICE_A_Handler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void CHANGE_NOTICE_B_Handler    ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void DMAC_0_3_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -99,7 +98,6 @@ extern void SERCOM2_Handler            ( void ) __attribute__((weak, alias("Dumm
 extern void TCC0_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void TCC1_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void TCC2_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
-extern void TC0_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void TC1_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void TC2_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 extern void TC3_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -147,7 +145,7 @@ const H3DeviceVectors exception_table=
     .pfnRTC_Handler                = RTC_Handler,
     .pfnEIC_Handler                = EIC_Handler,
     .pfnFREQM_Handler              = FREQM_Handler,
-    .pfnFLASH_CONTROL_Handler      = FLASH_CONTROL_Handler,
+    .pfnFLASH_CONTROL_Handler      = NVM_InterruptHandler,
     .pfnCHANGE_NOTICE_A_Handler    = CHANGE_NOTICE_A_Handler,
     .pfnCHANGE_NOTICE_B_Handler    = CHANGE_NOTICE_B_Handler,
     .pfnDMAC_0_3_Handler           = DMAC_0_3_Handler,
@@ -163,7 +161,7 @@ const H3DeviceVectors exception_table=
     .pfnTCC0_Handler               = TCC0_Handler,
     .pfnTCC1_Handler               = TCC1_Handler,
     .pfnTCC2_Handler               = TCC2_Handler,
-    .pfnTC0_Handler                = TC0_Handler,
+    .pfnTC0_Handler                = TC0_TimerInterruptHandler,
     .pfnTC1_Handler                = TC1_Handler,
     .pfnTC2_Handler                = TC2_Handler,
     .pfnTC3_Handler                = TC3_Handler,

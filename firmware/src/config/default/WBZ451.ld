@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------
- * MPLAB XC32 Compiler -  WBZ451 linker script
+ * MPLAB XC32 Compiler -  PIC32CX1012BZ25048 linker script
  * 
- * Copyright (c) 2023, Microchip Technology Inc. and its subsidiaries ("Microchip")
+ * Copyright (c) 2021, Microchip Technology Inc. and its subsidiaries ("Microchip")
  * All rights reserved.
  * 
  * This software is developed by Microchip Technology Inc. and its
@@ -60,42 +60,49 @@ ENTRY(__XC32_RESET_HANDLER_NAME)
  * macros in the MPLAB X project properties or on the command line when
  * calling the linker via the xc32-gcc shell.
  *************************************************************************/
+#ifndef PDS_LENGTH
+#define PDS_LENGTH           0x4000
+#endif
+
+#define ROM_BASE_ADDR        0x01000000
+#ifndef PDS_ORIGIN
+#define PDS_ORIGIN           ROM_BASE_ADDR
+#endif
 
 #ifndef ROM_ORIGIN
-#  define ROM_ORIGIN 0x1000000
+#define ROM_ORIGIN           (PDS_ORIGIN + PDS_LENGTH)
 #endif
+
 #ifndef ROM_LENGTH
-#  define ROM_LENGTH 0x100000
+	#define ROM_LENGTH        0x100000 - PDS_LENGTH
 #elif (ROM_LENGTH > 0x100000)
-#  error ROM_LENGTH is greater than the max size of 0x100000
+	#error ROM_LENGTH is greater than the max size of 0x100000
 #endif
+
 #ifndef BOOT_ROM_ORIGIN
-#  define BOOT_ROM_ORIGIN 0x0
+#  define BOOT_ROM_ORIGIN     0x0
 #endif
 #ifndef BOOT_ROM_LENGTH
-#  define BOOT_ROM_LENGTH 0x5e00
+#  define BOOT_ROM_LENGTH     0x5e00
 #elif (BOOT_ROM_LENGTH > 0x5e00)
 #  error BOOT_ROM_LENGTH is greater than the max size of 0x5e00
 #endif
 #ifndef RAM_ORIGIN
-#  define RAM_ORIGIN 0x20000000
+#  define RAM_ORIGIN          0x20000000
 #endif
 #ifndef RAM_LENGTH
 #  define RAM_LENGTH 0x20000
 #elif (RAM_LENGTH > 0x20000)
 #  error RAM_LENGTH is greater than the max size of 0x20000
 #endif
-#ifndef BKUPRAM_ORIGIN
-#  define BKUPRAM_ORIGIN 0x44014000
-#endif
-#ifndef BKUPRAM_LENGTH
-#  define BKUPRAM_LENGTH 0x2000
-#elif (BKUPRAM_LENGTH > 0x2000)
-#  error BKUPRAM_LENGTH is greater than the max size of 0x2000
+
+#ifndef BACKUPRAM_ORIGIN
+#  define BACKUPRAM_ORIGIN 0x44014000
 #endif
 
-
-
+#ifndef BACKUPRAM_LENGTH
+#  define BACKUPRAM_LENGTH 0x2000
+#endif
 /*************************************************************************
  * Memory-Region Definitions
  * The MEMORY command describes the location and size of blocks of memory
@@ -104,11 +111,48 @@ ENTRY(__XC32_RESET_HANDLER_NAME)
 MEMORY
 {
   boot_rom (LRX) : ORIGIN = BOOT_ROM_ORIGIN, LENGTH = BOOT_ROM_LENGTH
+  pds (RX) : ORIGIN = PDS_ORIGIN, LENGTH = PDS_LENGTH
   rom (LRX) : ORIGIN = ROM_ORIGIN, LENGTH = ROM_LENGTH
   ram (WX!R) : ORIGIN = RAM_ORIGIN, LENGTH = RAM_LENGTH
-  bkupram : ORIGIN = BKUPRAM_ORIGIN, LENGTH = BKUPRAM_LENGTH
+  bkupram         : ORIGIN = BACKUPRAM_ORIGIN, LENGTH = BACKUPRAM_LENGTH
+  config_00045F80 : ORIGIN = 0x00045F80, LENGTH = 0x4
+  config_00045E80 : ORIGIN = 0x00045E80, LENGTH = 0x4
+  config_00045F84 : ORIGIN = 0x00045F84, LENGTH = 0x4
+  config_00045F88 : ORIGIN = 0x00045F88, LENGTH = 0x4
+  config_00045E8C : ORIGIN = 0x00045E8C, LENGTH = 0x4
+  config_00045E90 : ORIGIN = 0x00045E90, LENGTH = 0x4
+  config_00045E98 : ORIGIN = 0x00045E98, LENGTH = 0x4
+  config_00045E94 : ORIGIN = 0x00045E94, LENGTH = 0x4
+  config_00045F98 : ORIGIN = 0x00045F98, LENGTH = 0x4
+  config_00045E84 : ORIGIN = 0x00045E84, LENGTH = 0x4
+  config_00045E9C : ORIGIN = 0x00045E9C, LENGTH = 0x4
+  config_00045EB0 : ORIGIN = 0x00045EB0, LENGTH = 0x4
+  config_00045F9C : ORIGIN = 0x00045F9C, LENGTH = 0x4
+  config_00045FB0 : ORIGIN = 0x00045FB0, LENGTH = 0x4
+  config_00045E88 : ORIGIN = 0x00045E88, LENGTH = 0x4
+  config_00045EB4 : ORIGIN = 0x00045EB4, LENGTH = 0x4
+  config_00045FB8 : ORIGIN = 0x00045FB8, LENGTH = 0x4
+  config_00045FB4 : ORIGIN = 0x00045FB4, LENGTH = 0x4
+  config_00045FBC : ORIGIN = 0x00045FBC, LENGTH = 0x4
+  config_00045F8C : ORIGIN = 0x00045F8C, LENGTH = 0x4
+  config_00045EB8 : ORIGIN = 0x00045EB8, LENGTH = 0x4
+  config_00045F90 : ORIGIN = 0x00045F90, LENGTH = 0x4
+  config_00045EBC : ORIGIN = 0x00045EBC, LENGTH = 0x4
+  config_00045F94 : ORIGIN = 0x00045F94, LENGTH = 0x4
 
 }
+
+
+SECTIONS {
+    .bkupram_data : {
+      *(.bkupram_data .bkupram_data.*)
+    } > bkupram
+    .bkupram_bss : {
+      *(.bkupram_bss .bkupram_bss.*)
+      *(.pbss .pbss.*)
+    } > bkupram
+}
+
 /*************************************************************************
  * Output region definitions.
  * CODE_REGION defines the output region for .text/.rodata.
@@ -117,9 +161,6 @@ MEMORY
  * 
  * CODE_REGION defaults to 'rom', if rom is present (non-zero length),
  * and 'ram' otherwise.
- * N.B. The BFA will still allocate code to any MEMORY named 'rom' regardless
- * of CODE_REGION's value. If you wish to use rom for something else please
- * rename the MEMORY entry.
  * DATA_REGION defaults to 'ram', which must be present.
  * VECTOR_REGION defaults to CODE_REGION, unless 'boot_rom' is present.
  */
@@ -136,6 +177,9 @@ MEMORY
 #ifndef VECTOR_REGION
 # define VECTOR_REGION boot_rom
 #endif
+#ifndef PDS_REGION
+#define PDS_REGION pds
+#endif
 
 __rom_end = ORIGIN(rom) + LENGTH(rom);
 __ram_end = ORIGIN(ram) + LENGTH(ram);
@@ -145,6 +189,78 @@ __ram_end = ORIGIN(ram) + LENGTH(ram);
  *************************************************************************/
 SECTIONS
 {
+    .config_00045F80 : {
+      KEEP(*(.config_00045F80))
+    } > config_00045F80
+    .config_00045E80 : {
+      KEEP(*(.config_00045E80))
+    } > config_00045E80
+    .config_00045F84 : {
+      KEEP(*(.config_00045F84))
+    } > config_00045F84
+    .config_00045F88 : {
+      KEEP(*(.config_00045F88))
+    } > config_00045F88
+    .config_00045E8C : {
+      KEEP(*(.config_00045E8C))
+    } > config_00045E8C
+    .config_00045E90 : {
+      KEEP(*(.config_00045E90))
+    } > config_00045E90
+    .config_00045E98 : {
+      KEEP(*(.config_00045E98))
+    } > config_00045E98
+    .config_00045E94 : {
+      KEEP(*(.config_00045E94))
+    } > config_00045E94
+    .config_00045F98 : {
+      KEEP(*(.config_00045F98))
+    } > config_00045F98
+    .config_00045E84 : {
+      KEEP(*(.config_00045E84))
+    } > config_00045E84
+    .config_00045E9C : {
+      KEEP(*(.config_00045E9C))
+    } > config_00045E9C
+    .config_00045EB0 : {
+      KEEP(*(.config_00045EB0))
+    } > config_00045EB0
+    .config_00045F9C : {
+      KEEP(*(.config_00045F9C))
+    } > config_00045F9C
+    .config_00045FB0 : {
+      KEEP(*(.config_00045FB0))
+    } > config_00045FB0
+    .config_00045E88 : {
+      KEEP(*(.config_00045E88))
+    } > config_00045E88
+    .config_00045EB4 : {
+      KEEP(*(.config_00045EB4))
+    } > config_00045EB4
+    .config_00045FB8 : {
+      KEEP(*(.config_00045FB8))
+    } > config_00045FB8
+    .config_00045FB4 : {
+      KEEP(*(.config_00045FB4))
+    } > config_00045FB4
+    .config_00045FBC : {
+      KEEP(*(.config_00045FBC))
+    } > config_00045FBC
+    .config_00045F8C : {
+      KEEP(*(.config_00045F8C))
+    } > config_00045F8C
+    .config_00045EB8 : {
+      KEEP(*(.config_00045EB8))
+    } > config_00045EB8
+    .config_00045F90 : {
+      KEEP(*(.config_00045F90))
+    } > config_00045F90
+    .config_00045EBC : {
+      KEEP(*(.config_00045EBC))
+    } > config_00045EBC
+    .config_00045F94 : {
+      KEEP(*(.config_00045F94))
+    } > config_00045F94
 
     /*
      * The linker moves the .vectors section into itcm when itcm is
@@ -167,8 +283,22 @@ SECTIONS
      * so that input sections may flow around absolute sections
      * as needed.
      */
+    .dnvMem :
+    {
+       __d_nv_mem_start = .;
+       __d_nv_mem_end = ORIGIN(pds) + LENGTH(pds);
+    } > PDS_REGION
     .text :
     {
+        /* Non-volatile file system PDS_FF section */
+        PROVIDE(__pds_ff_start = .);
+        KEEP(*(.pds_ff .pds_ff.*))
+        PROVIDE(__pds_ff_end = .);
+        /* Non-volatile file system PDS_FF section */
+        PROVIDE(__pds_fd_start = .);
+        KEEP(*(.pds_fd .pds_fd.*))
+        PROVIDE(__pds_fd_end = .);
+
         . = ALIGN(4);
         *(.glue_7t) *(.glue_7)
         *(.gnu.linkonce.r.*)
@@ -224,7 +354,6 @@ SECTIONS
     . = ALIGN(4);
     _etext = .;
 
-
     /*
      *  Align here to ensure that the .bss section occupies space up to
      *  _end.  Align after .bss to ensure correct alignment even if the
@@ -251,10 +380,5 @@ SECTIONS
     _end = . ;
     _ram_end_ = ORIGIN(ram) + LENGTH(ram) -1 ;
     
-    .bkupram_bss :
-    {
-        *(.bkupram_bss .bkupram_bss.*)
-        *(.pbss .pbss.*)
-    } > bkupram
 }
 

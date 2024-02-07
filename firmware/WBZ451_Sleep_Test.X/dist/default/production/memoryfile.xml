@@ -3,15 +3,15 @@
   <executable name="dist/default/production/WBZ451_Sleep_Test.X.production.elf">
     <memory name="program">
       <units>bytes</units>
-      <length>1048576</length>
-      <used>20953</used>
-      <free>1027623</free>
+      <length>1032192</length>
+      <used>73004</used>
+      <free>959188</free>
     </memory>
     <memory name="data">
       <units>bytes</units>
       <length>131072</length>
-      <used>51487</used>
-      <free>79585</free>
+      <used>56811</used>
+      <free>74261</free>
     </memory>
   </executable>
 </project>

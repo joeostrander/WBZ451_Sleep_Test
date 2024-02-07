@@ -1,3 +1,28 @@
+// DOM-IGNORE-BEGIN
+/*******************************************************************************
+* Copyright (C) 2023 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*******************************************************************************/
+// DOM-IGNORE-END
+
 /*******************************************************************************
   MPLAB Harmony Application Source File
 
@@ -26,12 +51,19 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
-
+#include <string.h>
 #include "app.h"
+#include "definitions.h"
+
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "peripheral/power/plib_power.h"
 #include "system/console/sys_console.h"
+#include "device_deep_sleep.h"
+#include "phy.h"
+
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -71,7 +103,8 @@ APP_DATA appData;
 // *****************************************************************************
 // *****************************************************************************
 
-
+static void shutdown(void);
+static void reset(void);
 /* TODO:  Add any necessary local functions.
 */
 
@@ -96,7 +129,7 @@ void APP_Initialize ( void )
     appData.state = APP_STATE_INIT;
 
 
-
+    appData.appQueue = xQueueCreate( 64, sizeof(APP_Msg_T) );
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
@@ -113,7 +146,12 @@ void APP_Initialize ( void )
 
 void APP_Tasks ( void )
 {
+    APP_Msg_T    appMsg[1];
+    APP_Msg_T *p_appMsg;
+    p_appMsg = appMsg;
 
+    static bool power_cycled = false;
+    
     /* Check the application's current state. */
     switch ( appData.state )
     {
@@ -121,11 +159,56 @@ void APP_Tasks ( void )
         case APP_STATE_INIT:
         {
             bool appInitialized = true;
+            //appData.appQueue = xQueueCreate( 10, sizeof(APP_Msg_T) );
 
+            
+            
+//
+//            SYS_CONSOLE_PRINT("RCON_RSWRST: 0x%08X\r\n", RCON_REGS->RCON_RSWRST);
+//            SYS_CONSOLE_PRINT("RCON_RCON: 0x%08X\r\n", RCON_REGS->RCON_RCON);
+//            vTaskDelay(500);
+            //11000000000000100000000000000011
+            
+//            if (RCON_RCON_SWR_SWR)  // A SOFTWARE RESET HAS OCCURRED
+//            {
+//                SYS_CONSOLE_PRINT("SHUTDOWN!!.\r\n");
+//                vTaskDelay(500);
+//                
+//                // clear bit?
+//                RCON_RCON_SWR(0);
+//
+//                shutdown();
+//                while(1);
+//            }
+
+            //if (RCON_REGS->RCON_RCON & 1)  // A POWER ON RESET HAS OCCURRED
+            //if (RCON_RCON_SWR_SWR)  // A SOFTWARE RESET HAS OCCURREDs
+            if (RCON_REGS->RCON_RCON & RCON_RCON_SWR_Msk)
+            {
+                SYS_CONSOLE_PRINT("SOFTWARE RESET\r\n");
+                vTaskDelay(100);
+                //shutdown();
+            }
+            else
+            {
+                SYS_CONSOLE_PRINT("POWER ON\r\n");
+                SYS_CONSOLE_PRINT("PHY INIT!.\r\n");
+                power_cycled = true;
+                SYS_Load_Cal(WSS_ENABLE_ZB);
+                PHY_Init();
+                
+                if(app_P2P_Phy_Init() != true)
+                {
+
+                    appInitialized = false;
+                }
+            }
+            
 
             if (appInitialized)
             {
                 SYS_CONSOLE_PRINT("READY.\r\n");
+                vTaskDelay(500);
                 appData.state = APP_STATE_SERVICE_TASKS;
             }
             break;
@@ -133,10 +216,28 @@ void APP_Tasks ( void )
 
         case APP_STATE_SERVICE_TASKS:
         {
+//            if (OSAL_QUEUE_Receive(&appData.appQueue, &appMsg, OSAL_WAIT_FOREVER))
+//            {
+//                app_P2P_Phy_TaskHandler(p_appMsg);
+//            }
+            
+            
+            
             if (xTaskGetTickCount() > 5000)
             {
-                taskDISABLE_INTERRUPTS();
-                POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
+                if (power_cycled)
+                {
+                    SYS_CONSOLE_PRINT("RESET\r\n");
+                    vTaskDelay(100);
+                    reset();
+                }
+                else
+                {
+                    SYS_CONSOLE_PRINT("SHUTDOWN\r\n");
+                    vTaskDelay(100);
+                    shutdown();
+                }
+                
             }
             break;
         }
@@ -153,6 +254,88 @@ void APP_Tasks ( void )
     }
 }
 
+//static void shutdown(void)
+//{
+//    PHY_TrxSleep(DEEP_SLEEP_MODE);
+//    DEVICE_EnterExtremeDeepSleep(false); 
+//}
+static void shutdown(void)
+{
+    __asm volatile( "cpsid i" ::: "memory" );
+    __asm volatile( "dsb" );
+    __asm volatile( "isb" );
+    
+    
+//    SYS_Load_Cal(WSS_ENABLE_NONE);
+    
+//    PMU_Set_Mode(PMU_MODE_BUCK_PSM);
+//    /* Disable current sensor to improve current consumption. */
+//    PMU_ConfigCurrentSensor(false);
+    
+    
+//    PMU_Set_Mode(0);    // TESTING!!!
+    
+    PAL_TimerStopAll();
+    
+    
+    PHY_RxEnable(PHY_STATE_TRX_OFF);
+    vTaskDelay(100);
+    taskDISABLE_INTERRUPTS();
+    PHY_TrxSleep(DEEP_SLEEP_MODE);
+    
+    
+    vTaskDelay(5000);
+    
+    POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
+    
+    DEVICE_EnterExtremeDeepSleep(false); 
+    
+
+}
+
+static void reset(void)
+{
+    PAL_TimerStopAll();
+    vTaskDelay(100);
+    
+    __asm volatile( "cpsid i" ::: "memory" );
+    __asm volatile( "dsb" );
+    __asm volatile( "isb" );
+    
+    PHY_RxEnable(PHY_STATE_TRX_OFF);
+    taskDISABLE_INTERRUPTS();
+    PHY_TrxSleep(DEEP_SLEEP_MODE);
+    POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
+//    DEVICE_EnterExtremeDeepSleep(false); 
+
+    /* Perform system unlock sequence */
+    CFG_REGS->CFG_SYSKEY = 0x00000000U;
+    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
+    CFG_REGS->CFG_SYSKEY = 0x556699AAU;
+    
+    // set SWRST bit to arm reset
+    RCON_REGS->RCON_RSWRSTSET = 1;
+    
+    // read RSWRST register to trigger reset
+    (void)RCON_REGS->RCON_RSWRST;
+    
+    // prevent any unwanted code execution until reset occurs
+    while(1);
+}
+//static void shutdown(void)
+//{
+//    __asm volatile( "cpsid i" ::: "memory" );
+//    __asm volatile( "dsb" );
+//    __asm volatile( "isb" );
+//
+//    taskDISABLE_INTERRUPTS();
+//    PHY_TrxSleep(DEEP_SLEEP_MODE);
+//
+//    DEVICE_EnterExtremeDeepSleep(false); 
+//    
+//    
+////                POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
+//}
 
 /*******************************************************************************
  End of File

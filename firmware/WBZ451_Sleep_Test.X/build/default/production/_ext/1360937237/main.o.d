@@ -96,7 +96,8 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
  ../src/config/default/device_cache.h ../src/config/default/device.h \
  ../src/config/default/toolchain_specifics.h \
  ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h \
- ../src/config/default/peripheral/power/plib_power.h \
+ ../src/config/default/driver/pds/include/pds.h \
+ ../src/config/default/driver/pds/include/pds_config.h \
  ../src/config/default/peripheral/evsys/plib_evsys.h \
  ../src/config/default/system/command/sys_command.h \
  ../src/config/default/configuration.h ../src/config/default/user.h \
@@ -108,13 +109,26 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
  ../src/config/default/peripheral/gpio/plib_gpio.h \
  ../src/config/default/peripheral/nvic/plib_nvic.h \
  ../src/config/default/peripheral/cmcc/plib_cmcc.h \
+ ../src/config/default/peripheral/tc/plib_tc0.h \
+ ../src/config/default/peripheral/tc/plib_tc_common.h \
+ ../src/config/default/system/time/sys_time.h \
+ ../src/config/default/system/time/sys_time_definitions.h \
+ ../src/config/default/system/int/sys_int.h \
+ ../src/config/default/system/int/sys_int_mapping.h \
+ ../src/config/default/peripheral/nvm/plib_nvm.h \
+ ../src/config/default/peripheral/power/plib_power.h \
+ ../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy.h \
+ ../src/config/default/driver/IEEE_802154_PHY/resources/buffer/inc/bmm.h \
+ ../src/config/default/driver/IEEE_802154_PHY/resources/queue/inc/qmm.h \
+ ../src/config/default/driver/IEEE_802154_PHY/phy/inc/ieee_phy_const.h \
+ ../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy_tasks.h \
+ ../src/config/default/app_p2p_phy/inc/app_p2p_phy_config.h \
+ ../src/config/default/peripheral/trng/plib_trng.h \
  ../src/config/default/system/console/sys_console.h \
  ../src/config/default/driver/driver.h \
  ../src/config/default/driver/driver_common.h \
  ../src/config/default/system/console/src/sys_console_local.h \
  ../src/config/default/system/console/src/sys_console_uart_definitions.h \
- ../src/config/default/system/int/sys_int.h \
- ../src/config/default/system/int/sys_int_mapping.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/FreeRTOS.h \
  ../src/config/default/FreeRTOSConfig.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/projdefs.h \
@@ -124,17 +138,31 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
  ../src/third_party/rtos/FreeRTOS/Source/include/mpu_wrappers.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/task.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/list.h \
- ../src/config/default/system/int/sys_int.h \
- ../src/config/default/system/cache/sys_cache.h \
- ../src/config/default/system/reset/sys_reset.h \
- ../src/config/default/osal/osal.h \
- ../src/config/default/osal/osal_definitions.h \
+ ../src/config/default/driver/device_support/include/info_block.h \
+ ../src/config/default/driver/device_support/include/rf_system.h \
+ ../src/config/default/driver/device_support/include/pmu_system.h \
+ ../src/config/default/driver/device_support/include/rf_system.h \
+ ../src/config/default/driver/device_support/include/sleep_system.h \
+ ../src/config/default/framework_defs.h \
+ ../src/config/default/osal/osal_freertos_extend.h \
  ../src/config/default/osal/osal_freertos.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/queue.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/task.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/semphr.h \
  ../src/third_party/rtos/FreeRTOS/Source/include/queue.h \
- ../src/config/default/system/debug/sys_debug.h ../src/app.h
+ ../src/app_idle_task.h ../src/config/default/system/int/sys_int.h \
+ ../src/config/default/system/cache/sys_cache.h \
+ ../src/config/default/system/reset/sys_reset.h \
+ ../src/config/default/osal/osal.h \
+ ../src/config/default/osal/osal_definitions.h \
+ ../src/config/default/osal/osal_freertos.h \
+ ../src/config/default/system/debug/sys_debug.h ../src/app.h \
+ ../src/config/default/osal/osal_freertos_extend.h \
+ ../src/config/default/app_p2p_phy/../app_p2p_phy/inc/app_p2p_phy.h \
+ ../src/config/default/driver/IEEE_802154_PHY/pal/inc/pal.h \
+ ../src/config/default/../../stack_config.h \
+ ../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy.h \
+ ../src/config/default/app_p2p_phy/app_phy_cmd_processor/inc/app_phy_cmd_processor.h
 
 ../src/config/default/definitions.h:
 
@@ -334,7 +362,9 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
 
 ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h:
 
-../src/config/default/peripheral/power/plib_power.h:
+../src/config/default/driver/pds/include/pds.h:
+
+../src/config/default/driver/pds/include/pds_config.h:
 
 ../src/config/default/peripheral/evsys/plib_evsys.h:
 
@@ -360,6 +390,36 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
 
 ../src/config/default/peripheral/cmcc/plib_cmcc.h:
 
+../src/config/default/peripheral/tc/plib_tc0.h:
+
+../src/config/default/peripheral/tc/plib_tc_common.h:
+
+../src/config/default/system/time/sys_time.h:
+
+../src/config/default/system/time/sys_time_definitions.h:
+
+../src/config/default/system/int/sys_int.h:
+
+../src/config/default/system/int/sys_int_mapping.h:
+
+../src/config/default/peripheral/nvm/plib_nvm.h:
+
+../src/config/default/peripheral/power/plib_power.h:
+
+../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy.h:
+
+../src/config/default/driver/IEEE_802154_PHY/resources/buffer/inc/bmm.h:
+
+../src/config/default/driver/IEEE_802154_PHY/resources/queue/inc/qmm.h:
+
+../src/config/default/driver/IEEE_802154_PHY/phy/inc/ieee_phy_const.h:
+
+../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy_tasks.h:
+
+../src/config/default/app_p2p_phy/inc/app_p2p_phy_config.h:
+
+../src/config/default/peripheral/trng/plib_trng.h:
+
 ../src/config/default/system/console/sys_console.h:
 
 ../src/config/default/driver/driver.h:
@@ -369,10 +429,6 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
 ../src/config/default/system/console/src/sys_console_local.h:
 
 ../src/config/default/system/console/src/sys_console_uart_definitions.h:
-
-../src/config/default/system/int/sys_int.h:
-
-../src/config/default/system/int/sys_int_mapping.h:
 
 ../src/third_party/rtos/FreeRTOS/Source/include/FreeRTOS.h:
 
@@ -392,6 +448,32 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
 
 ../src/third_party/rtos/FreeRTOS/Source/include/list.h:
 
+../src/config/default/driver/device_support/include/info_block.h:
+
+../src/config/default/driver/device_support/include/rf_system.h:
+
+../src/config/default/driver/device_support/include/pmu_system.h:
+
+../src/config/default/driver/device_support/include/rf_system.h:
+
+../src/config/default/driver/device_support/include/sleep_system.h:
+
+../src/config/default/framework_defs.h:
+
+../src/config/default/osal/osal_freertos_extend.h:
+
+../src/config/default/osal/osal_freertos.h:
+
+../src/third_party/rtos/FreeRTOS/Source/include/queue.h:
+
+../src/third_party/rtos/FreeRTOS/Source/include/task.h:
+
+../src/third_party/rtos/FreeRTOS/Source/include/semphr.h:
+
+../src/third_party/rtos/FreeRTOS/Source/include/queue.h:
+
+../src/app_idle_task.h:
+
 ../src/config/default/system/int/sys_int.h:
 
 ../src/config/default/system/cache/sys_cache.h:
@@ -404,14 +486,18 @@ build/default/production/_ext/1360937237/main.o: ../src/main.c \
 
 ../src/config/default/osal/osal_freertos.h:
 
-../src/third_party/rtos/FreeRTOS/Source/include/queue.h:
-
-../src/third_party/rtos/FreeRTOS/Source/include/task.h:
-
-../src/third_party/rtos/FreeRTOS/Source/include/semphr.h:
-
-../src/third_party/rtos/FreeRTOS/Source/include/queue.h:
-
 ../src/config/default/system/debug/sys_debug.h:
 
 ../src/app.h:
+
+../src/config/default/osal/osal_freertos_extend.h:
+
+../src/config/default/app_p2p_phy/../app_p2p_phy/inc/app_p2p_phy.h:
+
+../src/config/default/driver/IEEE_802154_PHY/pal/inc/pal.h:
+
+../src/config/default/../../stack_config.h:
+
+../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy.h:
+
+../src/config/default/app_p2p_phy/app_phy_cmd_processor/inc/app_phy_cmd_processor.h:
