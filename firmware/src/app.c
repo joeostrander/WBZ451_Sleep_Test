@@ -103,7 +103,7 @@ APP_DATA appData;
 // *****************************************************************************
 // *****************************************************************************
 
-static void shutdown(void);
+//static void shutdown(void);
 static void reset(void);
 /* TODO:  Add any necessary local functions.
 */
@@ -144,13 +144,17 @@ void APP_Initialize ( void )
     See prototype in app.h.
  */
 
+#define KILL_IT_WITH_FIRE_MAGIC_NUMBER     (0xDEADBEEF)
+
+extern uint32_t killitwithfire;
+
 void APP_Tasks ( void )
 {
     APP_Msg_T    appMsg[1];
     APP_Msg_T *p_appMsg;
     p_appMsg = appMsg;
 
-    static bool power_cycled = false;
+//    static bool power_cycled = false;
     
     /* Check the application's current state. */
     switch ( appData.state )
@@ -182,27 +186,28 @@ void APP_Tasks ( void )
 //            }
 
             //if (RCON_REGS->RCON_RCON & 1)  // A POWER ON RESET HAS OCCURRED
-            //if (RCON_RCON_SWR_SWR)  // A SOFTWARE RESET HAS OCCURREDs
-            if (RCON_REGS->RCON_RCON & RCON_RCON_SWR_Msk)
-            {
-                SYS_CONSOLE_PRINT("SOFTWARE RESET\r\n");
-                vTaskDelay(100);
-                //shutdown();
-            }
-            else
-            {
-                SYS_CONSOLE_PRINT("POWER ON\r\n");
-                SYS_CONSOLE_PRINT("PHY INIT!.\r\n");
-                power_cycled = true;
-                SYS_Load_Cal(WSS_ENABLE_ZB);
-                PHY_Init();
-                
-                if(app_P2P_Phy_Init() != true)
-                {
+            //if (RCON_RCON_SWR_SWR)  // A SOFTWARE RESET HAS OCCURRED
 
-                    appInitialized = false;
-                }
-            }
+//            if (RCON_REGS->RCON_RCON & RCON_RCON_SWR_Msk)
+//            {
+//                SYS_CONSOLE_PRINT("SOFTWARE RESET\r\n");
+//                vTaskDelay(100);
+//                //shutdown();
+//            }
+//            else
+//            {
+//                SYS_CONSOLE_PRINT("POWER ON\r\n");
+//                SYS_CONSOLE_PRINT("PHY INIT!.\r\n");
+//                power_cycled = true;
+//                SYS_Load_Cal(WSS_ENABLE_ZB);
+//                PHY_Init();
+//                
+//                if(app_P2P_Phy_Init() != true)
+//                {
+//
+//                    appInitialized = false;
+//                }
+//            }
             
 
             if (appInitialized)
@@ -225,18 +230,8 @@ void APP_Tasks ( void )
             
             if (xTaskGetTickCount() > 5000)
             {
-                if (power_cycled)
-                {
-                    SYS_CONSOLE_PRINT("RESET\r\n");
-                    vTaskDelay(100);
-                    reset();
-                }
-                else
-                {
-                    SYS_CONSOLE_PRINT("SHUTDOWN\r\n");
-                    vTaskDelay(100);
-                    shutdown();
-                }
+                killitwithfire = KILL_IT_WITH_FIRE_MAGIC_NUMBER;
+                RCON_SoftwareReset();
                 
             }
             break;
@@ -259,69 +254,78 @@ void APP_Tasks ( void )
 //    PHY_TrxSleep(DEEP_SLEEP_MODE);
 //    DEVICE_EnterExtremeDeepSleep(false); 
 //}
-static void shutdown(void)
-{
-    __asm volatile( "cpsid i" ::: "memory" );
-    __asm volatile( "dsb" );
-    __asm volatile( "isb" );
-    
-    
-//    SYS_Load_Cal(WSS_ENABLE_NONE);
-    
-//    PMU_Set_Mode(PMU_MODE_BUCK_PSM);
-//    /* Disable current sensor to improve current consumption. */
-//    PMU_ConfigCurrentSensor(false);
-    
-    
-//    PMU_Set_Mode(0);    // TESTING!!!
-    
-    PAL_TimerStopAll();
-    
-    
-    PHY_RxEnable(PHY_STATE_TRX_OFF);
-    vTaskDelay(100);
-    taskDISABLE_INTERRUPTS();
-    PHY_TrxSleep(DEEP_SLEEP_MODE);
-    
-    
-    vTaskDelay(5000);
-    
-    POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
-    
-    DEVICE_EnterExtremeDeepSleep(false); 
-    
-
-}
-
-static void reset(void)
-{
-    PAL_TimerStopAll();
-    vTaskDelay(100);
-    
-    __asm volatile( "cpsid i" ::: "memory" );
-    __asm volatile( "dsb" );
-    __asm volatile( "isb" );
-    
-    PHY_RxEnable(PHY_STATE_TRX_OFF);
-    taskDISABLE_INTERRUPTS();
-    PHY_TrxSleep(DEEP_SLEEP_MODE);
-    POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
+//static void shutdown(void)
+//{
+//    __asm volatile( "cpsid i" ::: "memory" );
+//    __asm volatile( "dsb" );
+//    __asm volatile( "isb" );
+//    
+//        GPIOA_REGS->GPIO_LAT = 0x0U; /* Initial Latch Value */
+//    GPIOA_REGS->GPIO_TRISCLR = 0x67ffU; /* Direction Control */
+//    
+//        GPIOB_REGS->GPIO_LAT = 0x0U; /* Initial Latch Value */
+//    GPIOB_REGS->GPIO_TRISCLR = 0x3fffU; /* Direction Control */
+//    GPIOB_REGS->GPIO_ANSELCLR = 0xffU; /* Digital Mode Enable */
+//    
+////    SYS_Load_Cal(WSS_ENABLE_NONE);
+//    
+////    PMU_Set_Mode(PMU_MODE_BUCK_PSM);
+////    /* Disable current sensor to improve current consumption. */
+////    PMU_ConfigCurrentSensor(false);
+//    
+//    
+////    PMU_Set_Mode(0);    // TESTING!!!
+//    
+//    
+//    
+//    PHY_RxEnable(PHY_STATE_TRX_OFF);
+//    vTaskDelay(100);
+//    taskDISABLE_INTERRUPTS();
+//    PHY_TrxSleep(DEEP_SLEEP_MODE);
+//    
+//    
+//    vTaskDelay(5000);
+//    
+//    POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
+//    
 //    DEVICE_EnterExtremeDeepSleep(false); 
+//    
+//
+//}
 
-    /* Perform system unlock sequence */
-    CFG_REGS->CFG_SYSKEY = 0x00000000U;
-    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
-    CFG_REGS->CFG_SYSKEY = 0x556699AAU;
-    
-    // set SWRST bit to arm reset
-    RCON_REGS->RCON_RSWRSTSET = 1;
-    
-    // read RSWRST register to trigger reset
-    (void)RCON_REGS->RCON_RSWRST;
-    
-    // prevent any unwanted code execution until reset occurs
-    while(1);
-}
+//static void reset(void)
+//{
+//        GPIOA_REGS->GPIO_LAT = 0x0U; /* Initial Latch Value */
+//    GPIOA_REGS->GPIO_TRISCLR = 0x67ffU; /* Direction Control */
+//    
+//        GPIOB_REGS->GPIO_LAT = 0x0U; /* Initial Latch Value */
+//    GPIOB_REGS->GPIO_TRISCLR = 0x3fffU; /* Direction Control */
+//    GPIOB_REGS->GPIO_ANSELCLR = 0xffU; /* Digital Mode Enable */
+//    
+//    __asm volatile( "cpsid i" ::: "memory" );
+//    __asm volatile( "dsb" );
+//    __asm volatile( "isb" );
+//    
+//    PHY_RxEnable(PHY_STATE_TRX_OFF);
+//    taskDISABLE_INTERRUPTS();
+//    PHY_TrxSleep(DEEP_SLEEP_MODE);
+//    POWER_LowPowerModeEnter(LOW_POWER_DEEP_SLEEP_MODE);
+////    DEVICE_EnterExtremeDeepSleep(false); 
+//
+//    /* Perform system unlock sequence */
+//    CFG_REGS->CFG_SYSKEY = 0x00000000U;
+//    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
+//    CFG_REGS->CFG_SYSKEY = 0x556699AAU;
+//    
+//    // set SWRST bit to arm reset
+//    RCON_REGS->RCON_RSWRSTSET = 1;
+//    
+//    // read RSWRST register to trigger reset
+//    (void)RCON_REGS->RCON_RSWRST;
+//    
+//    // prevent any unwanted code execution until reset occurs
+//    while(1);
+//}
 //static void shutdown(void)
 //{
 //    __asm volatile( "cpsid i" ::: "memory" );

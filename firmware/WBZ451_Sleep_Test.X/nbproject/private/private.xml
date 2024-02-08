@@ -3,15 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/configuration.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/peripheral/power/plib_power.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/driver/IEEE_802154_PHY/pal/src/pal.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/system/time/src/sys_time.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/system/time/sys_time.h</file>
             <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/driver/IEEE_802154_PHY/phy/inc/phy.h</file>
-            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/tasks.c</file>
-            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/packs/WBZ451_DFP/wbz451.h</file>
-            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/app_user_edits.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/main.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/FreeRTOSConfig.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/system/console/src/sys_console.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/third_party/rtos/FreeRTOS/Source/FreeRTOS_tasks.c</file>
             <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/app.c</file>
-            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/packs/WBZ451_DFP/component/rcon.h</file>
-            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/app_idle_task.c</file>
-            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/freertos_hooks.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/definitions.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/driver/device_support/include/pmu_system.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/driver/IEEE_802154_PHY/pal/inc/pal.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/app_p2p_phy/src/app_p2p_phy.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/device_deep_sleep.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/driver/device_support/include/sleep_system.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/peripheral/rcon/plib_rcon.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/driver/device_support/include/info_block.h</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/device_deep_sleep.c</file>
+            <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/peripheral/rcon/plib_rcon.h</file>
             <file>file:/C:/HarmonyProjects/WBZ451_Sleep_Test/firmware/src/config/default/initialization.c</file>
         </group>
     </open-files>

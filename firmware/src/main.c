@@ -26,7 +26,7 @@
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "definitions.h"                // SYS function prototypes
-
+#include "device_deep_sleep.h"          // GRACO EDIT OR ADDITION
 
 // *****************************************************************************
 // *****************************************************************************
@@ -51,6 +51,35 @@ int main ( void )
 }
 
 
+// GRACO EDIT OR ADDITION START
+#define KILL_IT_WITH_FIRE_MAGIC_NUMBER     (0xDEADBEEF)
+
+uint32_t __attribute__((persistent)) killitwithfire;
+
+void _on_reset( void )
+{
+    RCON_RESET_CAUSE reset_cause = RCON_ResetCauseGet();
+    RCON_ResetCauseClear( reset_cause );
+    
+    if( reset_cause & RCON_RESET_CAUSE_POR )
+    {
+        killitwithfire = 0;
+    }
+    else if( killitwithfire == KILL_IT_WITH_FIRE_MAGIC_NUMBER )
+    {
+        __asm volatile( "cpsid i" ::: "memory" );
+        __asm volatile( "dsb" );
+        __asm volatile( "isb" );
+
+        PMU_Set_Mode(PMU_MODE_BUCK_PSM);
+
+        /* Disable current sensor to improve current consumption. */
+        PMU_ConfigCurrentSensor(false);
+
+        DEVICE_EnterExtremeDeepSleep();        
+    }
+}
+// GRACO EDIT OR ADDITION END
 /*******************************************************************************
  End of File
 */

@@ -127,9 +127,9 @@ build/default/production/_ext/1832805299/sys_console_uart.o: \
  ../src/config/default/definitions.h \
  ../src/config/default/peripheral/sercom/usart/plib_sercom3_usart.h \
  ../src/config/default/peripheral/sercom/usart/plib_sercom_usart_common.h \
+ ../src/config/default/peripheral/evsys/plib_evsys.h \
  ../src/config/default/driver/pds/include/pds.h \
  ../src/config/default/driver/pds/include/pds_config.h \
- ../src/config/default/peripheral/evsys/plib_evsys.h \
  ../src/config/default/system/command/sys_command.h \
  ../src/config/default/peripheral/clk/plib_clk.h \
  ../src/config/default/peripheral/gpio/plib_gpio.h \
@@ -137,9 +137,10 @@ build/default/production/_ext/1832805299/sys_console_uart.o: \
  ../src/config/default/peripheral/cmcc/plib_cmcc.h \
  ../src/config/default/peripheral/tc/plib_tc0.h \
  ../src/config/default/peripheral/tc/plib_tc_common.h \
+ ../src/config/default/peripheral/rcon/plib_rcon.h \
+ ../src/config/default/peripheral/nvm/plib_nvm.h \
  ../src/config/default/system/time/sys_time.h \
  ../src/config/default/system/time/sys_time_definitions.h \
- ../src/config/default/peripheral/nvm/plib_nvm.h \
  ../src/config/default/peripheral/power/plib_power.h \
  ../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy.h \
  ../src/config/default/driver/IEEE_802154_PHY/resources/buffer/inc/bmm.h \
@@ -430,11 +431,11 @@ build/default/production/_ext/1832805299/sys_console_uart.o: \
 
 ../src/config/default/peripheral/sercom/usart/plib_sercom_usart_common.h:
 
+../src/config/default/peripheral/evsys/plib_evsys.h:
+
 ../src/config/default/driver/pds/include/pds.h:
 
 ../src/config/default/driver/pds/include/pds_config.h:
-
-../src/config/default/peripheral/evsys/plib_evsys.h:
 
 ../src/config/default/system/command/sys_command.h:
 
@@ -450,11 +451,13 @@ build/default/production/_ext/1832805299/sys_console_uart.o: \
 
 ../src/config/default/peripheral/tc/plib_tc_common.h:
 
+../src/config/default/peripheral/rcon/plib_rcon.h:
+
+../src/config/default/peripheral/nvm/plib_nvm.h:
+
 ../src/config/default/system/time/sys_time.h:
 
 ../src/config/default/system/time/sys_time_definitions.h:
-
-../src/config/default/peripheral/nvm/plib_nvm.h:
 
 ../src/config/default/peripheral/power/plib_power.h:
 

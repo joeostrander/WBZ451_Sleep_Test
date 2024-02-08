@@ -101,9 +101,9 @@ build/default/production/_ext/957911548/phy_task.o: \
  ../src/config/default/device_cache.h ../src/config/default/device.h \
  ../src/config/default/toolchain_specifics.h \
  ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h \
+ ../src/config/default/peripheral/evsys/plib_evsys.h \
  ../src/config/default/driver/pds/include/pds.h \
  ../src/config/default/driver/pds/include/pds_config.h \
- ../src/config/default/peripheral/evsys/plib_evsys.h \
  ../src/config/default/system/command/sys_command.h \
  ../src/config/default/configuration.h ../src/config/default/user.h \
  ../src/config/default/system/system.h \
@@ -116,11 +116,12 @@ build/default/production/_ext/957911548/phy_task.o: \
  ../src/config/default/peripheral/cmcc/plib_cmcc.h \
  ../src/config/default/peripheral/tc/plib_tc0.h \
  ../src/config/default/peripheral/tc/plib_tc_common.h \
+ ../src/config/default/peripheral/rcon/plib_rcon.h \
+ ../src/config/default/peripheral/nvm/plib_nvm.h \
  ../src/config/default/system/time/sys_time.h \
  ../src/config/default/system/time/sys_time_definitions.h \
  ../src/config/default/system/int/sys_int.h \
  ../src/config/default/system/int/sys_int_mapping.h \
- ../src/config/default/peripheral/nvm/plib_nvm.h \
  ../src/config/default/peripheral/power/plib_power.h \
  ../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy.h \
  ../src/config/default/driver/IEEE_802154_PHY/phy/inc/phy_tasks.h \
@@ -371,11 +372,11 @@ build/default/production/_ext/957911548/phy_task.o: \
 
 ../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h:
 
+../src/config/default/peripheral/evsys/plib_evsys.h:
+
 ../src/config/default/driver/pds/include/pds.h:
 
 ../src/config/default/driver/pds/include/pds_config.h:
-
-../src/config/default/peripheral/evsys/plib_evsys.h:
 
 ../src/config/default/system/command/sys_command.h:
 
@@ -403,6 +404,10 @@ build/default/production/_ext/957911548/phy_task.o: \
 
 ../src/config/default/peripheral/tc/plib_tc_common.h:
 
+../src/config/default/peripheral/rcon/plib_rcon.h:
+
+../src/config/default/peripheral/nvm/plib_nvm.h:
+
 ../src/config/default/system/time/sys_time.h:
 
 ../src/config/default/system/time/sys_time_definitions.h:
@@ -410,8 +415,6 @@ build/default/production/_ext/957911548/phy_task.o: \
 ../src/config/default/system/int/sys_int.h:
 
 ../src/config/default/system/int/sys_int_mapping.h:
-
-../src/config/default/peripheral/nvm/plib_nvm.h:
 
 ../src/config/default/peripheral/power/plib_power.h:
 

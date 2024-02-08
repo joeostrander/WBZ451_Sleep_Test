@@ -1,6 +1,27 @@
+/*******************************************************************************
+  Resets (RCON) PLIB
+
+  Company
+    Microchip Technology Inc.
+
+  File Name
+    plib_rcon.c
+
+  Summary
+    RCON PLIB Implementation File.
+
+  Description
+    This file defines the interface to the RCON peripheral library.
+    This library provides access to and control of the associated Resets.
+
+  Remarks:
+    None.
+
+*******************************************************************************/
+
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2022 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -23,42 +44,46 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef DEVICE_DEEP_SLEEP_H
-#define DEVICE_DEEP_SLEEP_H
-
-#include <stdbool.h>
-#include <stdint.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // *****************************************************************************
 // *****************************************************************************
-// Section: Macros
-// *****************************************************************************
-// *****************************************************************************
-    
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Function Prototypes
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 
-// *****************************************************************************
-/**
- *@brief The API is used to enter extreme deep sleep mode.
- *
- *@param[in] None
- *@param[out] None
- *
- *@retval None
-*/
-void DEVICE_EnterExtremeDeepSleep(void);
+#include "plib_rcon.h"
 
-#ifdef __cplusplus
+// *****************************************************************************
+// *****************************************************************************
+// Section: RCON Implementation
+// *****************************************************************************
+// *****************************************************************************
+
+RCON_RESET_CAUSE RCON_ResetCauseGet( void )
+{
+    return (RCON_RESET_CAUSE)(RCON_REGS->RCON_RCON);
 }
-#endif
 
-#endif//DEVICE_DEEP_SLEEP_H
+void RCON_ResetCauseClear( RCON_RESET_CAUSE cause )
+{
+    /* Clear reset cause status flag */
+    RCON_REGS->RCON_RCONCLR = (uint32_t)cause;
+}
+
+void __attribute__((noreturn)) RCON_SoftwareReset( void )
+{
+    /* Unlock System */
+    CFG_REGS->CFG_SYSKEY = 0x00000000;
+    CFG_REGS->CFG_SYSKEY = 0xAA996655U;
+    CFG_REGS->CFG_SYSKEY = 0x556699AA;
+
+    RCON_REGS->RCON_RSWRSTSET = RCON_RSWRST_SWRST_Msk;
+
+    /* Read RSWRST register to trigger reset */
+    RCON_REGS->RCON_RSWRST;
+
+    /* Prevent any unwanted code execution until reset occurs */
+    while(true)
+    {
+        /* Nothing to do */
+    }
+}
